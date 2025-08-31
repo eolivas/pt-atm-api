@@ -88,5 +88,17 @@ namespace Atm.Application.Services
             throw new DomainException("Unable to make a transfer.");
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsByAccountId(int accountId)
+        {
+            return await _transactionRepository.GetByAccountId(accountId);
+        }
+
+        public async Task<IEnumerable<Transaction>> GetByAccountIdAndDateRange(int accountId, DateTime startDate, DateTime endDate)
+        {
+            return await _transactionRepository.GetByAccountIdAndDateRange(accountId, startDate, endDate);
+        }
+
+
+
     }
 }

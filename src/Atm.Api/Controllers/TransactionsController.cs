@@ -2,7 +2,6 @@
 using Atm.Application.Services;
 using Atm.Domain.Exceptions;
 using Atm.Infrastructure.Exceptions;
-using Azure;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -96,14 +95,14 @@ namespace Atm.Api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Transaction()
-        {
-            //Records every financial movement as a double-entry transaction (debits and credits)
-            //It provides an unchangeable, auditable history. All other services can rebuild their state from the ledger's data if needed.
-            await Task.Delay(1000);
-            await Task.CompletedTask;
-            return Ok();
-        }        
+        //[HttpPost]
+        //public async Task<IActionResult> Transaction()
+        //{
+        //    //Records every financial movement as a double-entry transaction (debits and credits)
+        //    //It provides an unchangeable, auditable history. All other services can rebuild their state from the ledger's data if needed.
+        //    await Task.Delay(1000);
+        //    await Task.CompletedTask;
+        //    return Ok();
+        //}        
     }
 }

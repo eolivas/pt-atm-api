@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Atm.Application.Services;
+using Atm.Domain.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Atm.Api.Controllers
 {
@@ -7,26 +9,26 @@ namespace Atm.Api.Controllers
     public class TransactionsHistoryController : ControllerBase
     {
         private readonly ILogger<TransactionsHistoryController> _logger;
+        private readonly ITransactionService _transactionService;
 
-        public TransactionsHistoryController(ILogger<TransactionsHistoryController> logger)
+        public TransactionsHistoryController(ILogger<TransactionsHistoryController> logger, ITransactionService transactionService)
         {
             _logger = logger;
+            _transactionService = transactionService;
         }
 
-        [HttpGet("{Id}")]
-        public async Task<IActionResult> TransactionsHistory()
+        [HttpGet("{accountId}")]
+        public async Task<IActionResult> TransactionsHistoryByAccountId([FromRoute] int accountId)
         {
-            await Task.Delay(1000);
-            await Task.CompletedTask;
-            return Ok();
+            IEnumerable<Transaction> transactions = await _transactionService.GetTransactionsByAccountId(accountId);
+            return Ok(transactions);
         }
 
-        [HttpGet("Balance/{Id}")]
-        public async Task<IActionResult> TransactionsBalance()
+        [HttpGet("DateRange/{accountId}")]
+        public async Task<IActionResult> TransactionsHistoryByAccountIdAndDateRange([FromRoute] int accountId, [FromQuery] DateTime startDate, DateTime endDate)
         {
-            await Task.Delay(1000);
-            await Task.CompletedTask;
-            return Ok();
+            IEnumerable<Transaction> transactions = await _transactionService.GetByAccountIdAndDateRange(accountId, startDate, endDate);
+            return Ok(transactions);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Atm.Application.Dtos;
+using Atm.Domain.Models;
 
 namespace Atm.Application.Services
 {
@@ -7,5 +8,8 @@ namespace Atm.Application.Services
         Task<int> Deposit(DepositDto depositDto);
         Task<int> Withdraw(WithdrawDto withdrawDto);
         Task<int> Transfer(TransferDto transferDto);
+        Task<IEnumerable<Transaction>> GetTransactionsByAccountId(int accountId);
+        Task<IEnumerable<Transaction>> GetByAccountIdAndDateRange(int accountId, DateTime startDate, DateTime endDate);
+
     }
 }
