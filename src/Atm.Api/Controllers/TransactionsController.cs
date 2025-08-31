@@ -71,11 +71,29 @@ namespace Atm.Api.Controllers
         }
 
         [HttpPost("Transfer")]
-        public async Task<IActionResult> Transfer()
+        public async Task<IActionResult> Transfer([FromBody] TransferDto transferDto)
         {
-            await Task.Delay(1000);
-            await Task.CompletedTask;
-            return Ok();
+            try
+            {
+                int transferId = await _transactionService.Transfer(transferDto);
+                return Ok(transferId);
+            }
+            catch (InvalidAccountBalanceException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (InvalidTransactionAmountException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (UniqueConstraintException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (InfrastructureException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost]

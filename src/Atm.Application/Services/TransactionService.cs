@@ -35,7 +35,7 @@ namespace Atm.Application.Services
             if (transaction.Id > 0)
                 return transaction.Id;
 
-            throw new Exception("Unable to make a deposit.");
+            throw new DomainException("Unable to make a deposit.");
         }
 
         public async Task<int> Withdraw(WithdrawDto withdrawDto)
@@ -60,14 +60,33 @@ namespace Atm.Application.Services
             if (transaction.Id > 0)
                 return transaction.Id;
 
-            throw new Exception("Unable to make a withdraw.");
+            throw new DomainException("Unable to make a withdraw.");
         }
 
-        //public async Task<Transaction> Transfer(Transaction transaction)
-        //{
-        //    transaction.Type = TransactionType.Withdrawal;
-        //    return await _transactionRepository.Add(transaction);
-        //}
+        public async Task<int> Transfer(TransferDto transferDto)
+        {
+            //Add account validation for same account
+            //Add account validation to check existing account
+
+            WithdrawDto withdrawDto = new (transferDto.DebitAccountId, transferDto.Amount);
+            int debitTransactionId = await Withdraw(withdrawDto);
+
+            DepositDto depositDto = new (transferDto.CreditAccountId, transferDto.Amount);
+            int creditTransactionId = await Deposit(depositDto);
+
+            Transfer transfer = new Transfer
+            {
+                DebitTransactionId = debitTransactionId,
+                CreditTransactionId = creditTransactionId
+            };
+
+            _ = await _transactionRepository.AddTransfer(transfer);
+
+            if (transfer.Id > 0)
+                return transfer.Id;
+
+            throw new DomainException("Unable to make a transfer.");
+        }
 
     }
 }

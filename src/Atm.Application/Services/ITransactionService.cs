@@ -6,5 +6,6 @@ namespace Atm.Application.Services
     {
         Task<int> Deposit(DepositDto depositDto);
         Task<int> Withdraw(WithdrawDto withdrawDto);
+        Task<int> Transfer(TransferDto transferDto);
     }
 }

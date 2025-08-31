@@ -57,5 +57,25 @@ namespace Atm.Infrastructure.Repositories
         {
             return await _context.Transactions.FindAsync(transactionId);
         }
+
+        public async Task<Transfer> AddTransfer(Transfer transfer)
+        {
+            transfer.CreatedOn = DateTime.UtcNow;
+
+            _context.Transfers.Add(transfer);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
+                    throw new UniqueConstraintException("A transfer with this Id already exists.", ex);
+
+                throw new InfrastructureException("An error occurred while saving transfer to the database.", ex);
+            }
+
+            return transfer;
+        }
     }
 }
