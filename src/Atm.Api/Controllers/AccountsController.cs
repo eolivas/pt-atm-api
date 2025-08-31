@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Atm.Application.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Atm.Api.Controllers
 {
@@ -7,18 +8,26 @@ namespace Atm.Api.Controllers
     public class AccountsController : ControllerBase
     {
         private readonly ILogger<AccountsController> _logger;
+        private readonly IAccountService _accountService;
 
-        public AccountsController(ILogger<AccountsController> logger)
+        public AccountsController(ILogger<AccountsController> logger, IAccountService accountService)
         {
             _logger = logger;
+            _accountService = accountService;
         }
 
-        [HttpGet("Balance")]
-        public async Task<IActionResult> Balance()
+        [HttpGet("Balance/{id}")]
+        public async Task<IActionResult> Balance([FromRoute] int id)
         {
-            await Task.Delay(1000);
-            await Task.CompletedTask;
-            return Ok(7589.59);
+            try
+            {
+                decimal balance = await _accountService.GetAccountBalance(id);
+                return Ok(balance);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
     }
 }

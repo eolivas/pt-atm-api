@@ -26,10 +26,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 #endregion
 
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 
 // Service for standardized error responses (RFC 7807)
@@ -51,8 +53,11 @@ using (var scope = app.Services.CreateScope())
             new Account { Id = 2002, FirstName = "Michael", LastName = "King", AccountType = AccountType.Savings }
         );
         dbContext.Transactions.AddRange(
-            new Transaction { Id = 1001, AccountId = 2001, Amount = 5000, TransactionDate = new DateTime(2025,08,01), Type = TransactionType.Deposit},
-            new Transaction { Id = 1002, AccountId = 2002, Amount = 2500, TransactionDate = new DateTime(2025, 08, 02), Type = TransactionType.Deposit }
+            new Transaction { Id = 1001, AccountId = 2001, Amount = 5000, TransactionDate = new DateTime(2025,08,01), Type = TransactionType.Credit},
+            new Transaction { Id = 1002, AccountId = 2002, Amount = 2500, TransactionDate = new DateTime(2025, 08, 02), Type = TransactionType.Credit },
+            new Transaction { Id = 1003, AccountId = 2001, Amount = 250, TransactionDate = new DateTime(2025, 08, 02), Type = TransactionType.Debit },
+            new Transaction { Id = 1004, AccountId = 2001, Amount = 700, TransactionDate = new DateTime(2025, 08, 03), Type = TransactionType.Debit },
+            new Transaction { Id = 1005, AccountId = 2002, Amount = 180, TransactionDate = new DateTime(2025, 08, 04), Type = TransactionType.Debit }
         );
         dbContext.SaveChanges();
     }
