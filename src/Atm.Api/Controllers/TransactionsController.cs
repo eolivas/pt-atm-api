@@ -1,5 +1,8 @@
 ﻿using Atm.Application.Dtos;
 using Atm.Application.Services;
+using Atm.Domain.Exceptions;
+using Atm.Infrastructure.Exceptions;
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Mime;
 
@@ -22,8 +25,23 @@ namespace Atm.Api.Controllers
         [HttpPost("Deposit")]
         public async Task<IActionResult> Deposit([FromBody] DepositDto depositDto)
         {
-            int transactionId = await _transactionService.Deposit(depositDto);
-            return Ok(transactionId);
+            try
+            {
+                int transactionId = await _transactionService.Deposit(depositDto);
+                return Ok(transactionId);
+            }
+            catch (InvalidTransactionAmountException ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+            catch (UniqueConstraintException ex)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, ex.Message);
+            }
+            catch (InfrastructureException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
         }
 
         [HttpPost("Withdraw")]

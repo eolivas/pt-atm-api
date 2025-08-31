@@ -1,5 +1,6 @@
 ﻿using Atm.Application.Dtos;
 using Atm.Domain.Enums;
+using Atm.Domain.Exceptions;
 using Atm.Domain.Models;
 using Atm.Infrastructure.Repositories;
 
@@ -16,6 +17,10 @@ namespace Atm.Application.Services
 
         public async Task<int> Deposit(DepositDto depositDto)
         {
+
+            if (depositDto.Amount <= 0)
+                throw new InvalidTransactionAmountException(depositDto.Amount);
+
             Transaction transaction = new Transaction 
             { 
                 AccountId = depositDto.AccountId,

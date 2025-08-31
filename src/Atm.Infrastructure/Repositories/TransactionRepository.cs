@@ -1,5 +1,7 @@
 ﻿using Atm.Domain.Models;
 using Atm.Infrastructure.DataBaseContext;
+using Atm.Infrastructure.Exceptions;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Atm.Infrastructure.Repositories
@@ -18,7 +20,18 @@ namespace Atm.Infrastructure.Repositories
             transaction.TransactionDate = DateTime.UtcNow;
 
             _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is SqlException sqlEx && sqlEx.Number == 2627)
+                    throw new UniqueConstraintException("A transaction with this Id already exists.", ex);
+
+                throw new InfrastructureException("An error occurred while saving transaction to the database.", ex);
+            }
+
             return transaction;
         }
 

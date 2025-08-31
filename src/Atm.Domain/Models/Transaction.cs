@@ -17,7 +17,6 @@ namespace Atm.Domain.Models
         [Required]
         public DateTime TransactionDate { get; set; }
 
-
         public TransactionType Type { get; set; }
 
     }
