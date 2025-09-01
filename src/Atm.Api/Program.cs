@@ -8,9 +8,24 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var corsAllowAllOrigins = "_corsAllowAllOrigins";
+
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+// Add and define the CORS policy to allow everything for Demo
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsAllowAllOrigins,
+                      policy =>
+                      {
+                          policy.AllowAnyOrigin()
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -75,6 +90,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseStatusCodePages(); // Optional: provides simple text-based responses for status codes like 404
 app.UseHttpsRedirection();
+
+app.UseCors(corsAllowAllOrigins);
 
 app.UseAuthorization();
 
