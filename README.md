@@ -1,6 +1,6 @@
 # pt-atm-api
-Target framework: .NET 8
-Swagger: http://localhost:5078/swagger/index.html
+Target framework: .NET 8  
+Swagger: http://localhost:5078/swagger/index.html  
 Database: SQLite (memory) Initial data load when API starts
 
 ## Project Setup - Compile
