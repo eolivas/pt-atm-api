@@ -15,4 +15,5 @@ Go to folder: pt-atm-api/src/Atm.Api
 dotnet run
 ```
 
+<img width="1676" height="1574" alt="image" src="https://github.com/user-attachments/assets/f30ed224-9170-4bd9-9d30-45ab4c253b70" />
 
